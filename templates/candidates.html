@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>All Candidates - Resume Parser</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', Tahoma, sans-serif; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); min-height: 100vh; padding: 40px 20px; }
+        .container { max-width: 1200px; margin: 0 auto; }
+        h1 { color: white; text-align: center; margin-bottom: 30px; font-size: 2.5rem; }
+        .search-box { background: white; padding: 20px; border-radius: 15px; margin-bottom: 30px; box-shadow: 0 10px 40px rgba(0,0,0,0.2); }
+        .search-box input { width: 100%; padding: 15px 20px; border: 2px solid #e0e0e0; border-radius: 10px; font-size: 1rem; }
+        .search-box input:focus { outline: none; border-color: #667eea; }
+        .candidates-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(350px, 1fr)); gap: 25px; }
+        .candidate-card { background: white; border-radius: 15px; padding: 25px; box-shadow: 0 10px 40px rgba(0,0,0,0.1); transition: transform 0.3s; }
+        .candidate-card:hover { transform: translateY(-5px); }
+        .candidate-name { font-size: 1.4rem; color: #333; margin-bottom: 10px; font-weight: 600; }
+        .candidate-contact { color: #666; margin-bottom: 15px; font-size: 0.9rem; }
+        .candidate-contact span { display: block; margin: 5px 0; }
+        .section-title { font-size: 0.9rem; color: #667eea; font-weight: 600; margin: 15px 0 8px; text-transform: uppercase; }
+        .skills-list { display: flex; flex-wrap: wrap; gap: 8px; }
+        .skill-tag { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 5px 12px; border-radius: 20px; font-size: 0.8rem; }
+        .info-text { color: #555; font-size: 0.9rem; line-height: 1.5; }
+        .no-results { text-align: center; color: white; padding: 50px; font-size: 1.2rem; }
+        .nav-links { text-align: center; margin-top: 30px; }
+        .nav-links a { color: white; text-decoration: none; padding: 12px 30px; background: rgba(255,255,255,0.2); border-radius: 25px; margin: 0 10px; transition: background 0.3s; }
+        .nav-links a:hover { background: rgba(255,255,255,0.3); }
+        .stats { text-align: center; color: white; margin-bottom: 20px; font-size: 1.1rem; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>All Candidates</h1>
+        <div class="stats">Total Candidates: {{ candidates|length }}</div>
+        <div class="search-box">
+            <input type="text" id="searchInput" placeholder="Search by name or skill..." onkeyup="filterCandidates()">
+        </div>
+        {% if candidates %}
+        <div class="candidates-grid" id="candidatesGrid">
+            {% for candidate in candidates %}
+            <div class="candidate-card" data-name="{{ candidate.name|lower }}" data-skills="{{ candidate.skills|lower }}">
+                <div class="candidate-name">{{ candidate.name or 'Unknown' }}</div>
+                <div class="candidate-contact">
+                    <span>Email: {{ candidate.email or 'Not found' }}</span>
+                    <span>Phone: {{ candidate.phone or 'Not found' }}</span>
+                </div>
+                <div class="section-title">Skills</div>
+                <div class="skills-list">
+                    {% for skill in candidate.skills.split(',') if candidate.skills %}
+                    <span class="skill-tag">{{ skill.strip() }}</span>
+                    {% else %}
+                    <span class="info-text">No skills listed</span>
+                    {% endfor %}
+                </div>
+                <div class="section-title">Education</div>
+                <div class="info-text">{{ candidate.education or 'Not specified' }}</div>
+                <div class="section-title">Experience</div>
+                <div class="info-text">{{ candidate.experience or 'Not specified' }}</div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="no-results">No candidates found. Upload some resumes to get started!</div>
+        {% endif %}
+        <div class="nav-links">
+            <a href="/">Upload Resume</a>
+        </div>
+    </div>
+    <script>
+        function filterCandidates() {
+            const query = document.getElementById('searchInput').value.toLowerCase();
+            const cards = document.querySelectorAll('.candidate-card');
+            cards.forEach(card => {
+                const name = card.dataset.name || '';
+                const skills = card.dataset.skills || '';
+                if (name.includes(query) || skills.includes(query)) {
+                    card.style.display = 'block';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        }
+    </script>
+</body>
+</html>
