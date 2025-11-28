@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resume Parser - Upload</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', sans-serif; background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%); min-height: 100vh; display: flex; justify-content: center; align-items: center; padding: 20px; }
+        .container { background: white; border-radius: 20px; padding: 40px; max-width: 500px; width: 100%; box-shadow: 0 20px 60px rgba(0,0,0,0.3); }
+        h1 { color: #1e3c72; text-align: center; margin-bottom: 10px; }
+        p.subtitle { color: #666; text-align: center; margin-bottom: 30px; }
+        .upload-area { border: 3px dashed #1e3c72; border-radius: 15px; padding: 40px; text-align: center; transition: all 0.3s; cursor: pointer; }
+        .upload-area:hover { background: #f0f4ff; border-color: #2a5298; }
+        .upload-area input { display: none; }
+        .upload-icon { font-size: 48px; color: #1e3c72; margin-bottom: 15px; }
+        .upload-text { color: #666; margin-bottom: 10px; }
+        .upload-hint { color: #999; font-size: 0.9em; }
+        .btn { display: block; width: 100%; padding: 15px; background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%); color: white; border: none; border-radius: 10px; font-size: 1.1em; cursor: pointer; margin-top: 20px; transition: transform 0.2s; }
+        .btn:hover { transform: scale(1.02); }
+        .error { background: #ffe6e6; color: #cc0000; padding: 15px; border-radius: 10px; margin-bottom: 20px; }
+        .nav { text-align: center; margin-top: 20px; }
+        .nav a { color: #1e3c72; text-decoration: none; }
+        .nav a:hover { text-decoration: underline; }
+        .file-name { margin-top: 15px; color: #1e3c72; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Resume Parser</h1>
+        <p class="subtitle">Upload a resume to extract candidate information</p>
+        {% if error %}<div class="error">{{ error }}</div>{% endif %}
+        <form action="/upload" method="POST" enctype="multipart/form-data">
+            <div class="upload-area" onclick="document.getElementById('resume').click()">
+                <div class="upload-icon">📄</div>
+                <div class="upload-text">Click to upload or drag and drop</div>
+                <div class="upload-hint">PDF or DOCX (max 16MB)</div>
+                <input type="file" name="resume" id="resume" accept=".pdf,.docx,.doc" onchange="showFileName(this)">
+                <div class="file-name" id="fileName"></div>
+            </div>
+            <button type="submit" class="btn">Parse Resume</button>
+        </form>
+        <div class="nav"><a href="/candidates">View All Candidates</a></div>
+    </div>
+    <script>
+        function showFileName(input) {
+            if (input.files && input.files[0]) {
+                document.getElementById('fileName').textContent = 'Selected: ' + input.files[0].name;
+            }
+        }
+    </script>
+</body>
+</html>
