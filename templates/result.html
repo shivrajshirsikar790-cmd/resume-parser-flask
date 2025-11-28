@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resume Parser - Results</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', sans-serif; background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%); min-height: 100vh; padding: 20px; }
+        .container { background: white; border-radius: 20px; padding: 40px; max-width: 800px; margin: 0 auto; box-shadow: 0 20px 60px rgba(0,0,0,0.3); }
+        h1 { color: #1e3c72; margin-bottom: 30px; text-align: center; }
+        .success { background: #e6ffe6; color: #006600; padding: 15px; border-radius: 10px; margin-bottom: 20px; text-align: center; }
+        .card { background: #f8f9fa; border-radius: 10px; padding: 20px; margin-bottom: 20px; }
+        .card h3 { color: #1e3c72; margin-bottom: 15px; border-bottom: 2px solid #1e3c72; padding-bottom: 10px; }
+        .info-row { display: flex; margin-bottom: 10px; }
+        .label { font-weight: bold; color: #666; width: 120px; }
+        .value { color: #333; flex: 1; }
+        .skills { display: flex; flex-wrap: wrap; gap: 8px; }
+        .skill-tag { background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%); color: white; padding: 5px 15px; border-radius: 20px; font-size: 0.9em; }
+        .list-item { padding: 8px 0; border-bottom: 1px solid #eee; }
+        .list-item:last-child { border-bottom: none; }
+        .btn { display: inline-block; padding: 12px 30px; background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%); color: white; text-decoration: none; border-radius: 10px; margin: 10px 10px 10px 0; }
+        .btn:hover { opacity: 0.9; }
+        .btn-secondary { background: #6c757d; }
+        .actions { margin-top: 30px; text-align: center; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Parsed Resume Results</h1>
+        <div class="success">Resume parsed successfully and saved to database!</div>
+        <div class="card">
+            <h3>Contact Information</h3>
+            <div class="info-row"><span class="label">Name:</span><span class="value">{{ data.name }}</span></div>
+            <div class="info-row"><span class="label">Email:</span><span class="value">{{ data.email or 'Not found' }}</span></div>
+            <div class="info-row"><span class="label">Phone:</span><span class="value">{{ data.phone or 'Not found' }}</span></div>
+        </div>
+        <div class="card">
+            <h3>Skills</h3>
+            <div class="skills">
+                {% for skill in data.skills %}<span class="skill-tag">{{ skill }}</span>{% else %}<span>No skills detected</span>{% endfor %}
+            </div>
+        </div>
+        <div class="card">
+            <h3>Education</h3>
+            {% for edu in data.education %}<div class="list-item">{{ edu }}</div>{% else %}<div>No education info found</div>{% endfor %}
+        </div>
+        <div class="card">
+            <h3>Experience</h3>
+            {% for exp in data.experience %}<div class="list-item">{{ exp }}</div>{% else %}<div>No experience info found</div>{% endfor %}
+        </div>
+        <div class="actions">
+            <a href="/" class="btn">Upload Another Resume</a>
+            <a href="/candidates" class="btn btn-secondary">View All Candidates</a>
+        </div>
+    </div>
+</body>
+</html>
